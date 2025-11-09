@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Frente de Caixa</title>
+  <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="caixa.css" />
+</head>
+<body>
+  <iframe id="iframe-impressao" style="display:none;"></iframe>
+
+  <div id="top-bar">
+    <div class="top-bar-left">
+      <span class="logo">🛒</span>
+      <span class="nome-loja" id="display-nome-loja">Nome da Loja</span>
+    </div>
+    <div class="top-bar-middle">
+        <span>Operador: <strong id="display-operador">N/A</strong></span>
+        <span>Status: <strong id="display-status-caixa">Fechado</strong></span>
+    </div>
+    <div class="top-bar-right">
+      <span id="display-horario">--:--</span>
+      <button class="settings-button" onclick="abrirModalConfiguracoes()">⚙️</button>
+    </div>
+  </div>
+
+  <div id="bloqueio-tela">
+    <p style="font-size:22px; margin-bottom: 20px;">🔒 Caixa fechado. Clique abaixo para abrir:</p>
+    <button id="btn-abrir-caixa" onclick="abrirModalAbertura()"> 🟢 Abrir Caixa</button>
+  </div>
+
+  <div class="container">
+    <div class="esquerda">
+      <h1>🗳️ Frente de Caixa</h1>
+
+      <div class="input-section">
+        <label for="codigo-barra">Código de Barras:</label>
+        <input type="text" id="codigo-barra" placeholder="Código de barras"
+          onkeypress="if(event.key === 'Enter') adicionarItemVenda()" />
+
+        <label for="quantidade-produto" style="margin-top: 8px;">Quantidade:</label>
+        <input type="number" id="quantidade-produto" placeholder="Quantidade" min="1" value="1"
+          onkeypress="if(event.key === 'Enter') adicionarItemVenda()" />
+        
+        <div class="total-display">
+          Total da Venda: R$ <span id="total-geral">0.00</span>
+        </div>
+      </div>
+
+      <div class="botoes-caixa">
+        <button onclick="abrirOpcoesPagamento()">✅ Finalizar Venda</button>
+        <button onclick="fecharCaixa()">📦 Fechar Caixa</button>
+        <button onclick="abrirModalSangria()">➖ Sangria</button>
+        <button onclick="abrirModalSuprimento()">➕ Suprimento</button>
+        <button onclick="reimprimirUltimoCupom()">🖨️ Reimprimir Último Cupom</button>
+        <button id="btn-desconto" onclick="abrirModalDesconto()">Desconto</button>
+      </div>
+    </div>
+
+    <div class="direita">
+      <div class="product-table-section">
+        <h3>Produtos na Venda</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Código</th>
+              <th>Qtd</th>
+              <th>Unit.</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="itens-venda">
+            </tbody>
+        </table>
+        <div style="margin-top: 10px; font-weight: bold; text-align: right;">
+          Total Geral: R$ <span id="total-geral-lado">0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-abertura" class="modal">
+    <div class="modal-content">
+      <h3>💵 Abertura de Caixa 💵</h3>
+      <label for="valor-abertura">Valor de Abertura:</label>
+      <input type="number" step="0.01" id="valor-abertura" placeholder="Ex: 100.00" />
+      <button onclick="confirmarAbertura()">Confirmar Abertura</button>
+    </div>
+  </div>
+
+  <div id="modal-pagamento" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalPagamento()">&times;</span>
+      <h2>Formas de Pagamento</h2>
+      <p>1. Pix</p>
+      <p>2. Crédito</p>
+      <p>3. Débito</p>
+      <p>4. Dinheiro</p>
+      <p>5. Cheque</p>
+      <p>6. VR</p>
+      <p>7. Pagamento Misto</p>
+      <p>8. Fiado (Pagar Depois)</p>
+      
+      <button onclick="fecharModalPagamento()">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-senha-fechamento" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalSenhaFechamento()">&times;</span>
+      <h3>🔐 Fechar Caixa</h3>
+      <input type="password" id="input-senha-fechar" placeholder="Digite a senha de fechamento" />
+      <button onclick="confirmarFechamentoCaixa()">Confirmar</button>
+      <button onclick="fecharModalSenhaFechamento()">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-suprimento" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="document.getElementById('modal-suprimento').style.display='none'">&times;</span>
+      <h3>Adicionar Valor (Suprimento)</h3>
+      <label>Valor:</label>
+      <input type="text" id="valor-suprimento" placeholder="R$ 0,00" />
+      <label>Motivo:</label>
+      <input type="text" id="motivo-suprimento" placeholder="Ex: Adição de troco" />
+      <button onclick="confirmarSuprimento()">Confirmar Suprimento</button>
+      <button onclick="document.getElementById('modal-suprimento').style.display='none'">Cancelar</button>
+    </div>
+  </div>
+
+
+  <div id="modal-troco" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalTroco()">&times;</span>
+      <h3>Pagamento em Dinheiro</h3>
+      <div><label>Total da Venda:</label><strong id="total-em-dinheiro"></strong></div>
+      <div><label>Valor Recebido:</label><input type="text" id="valor-recebido" placeholder="R$ 0,00" /></div>
+      <div><label>Troco:</label><strong id="valor-troco">R$ 0,00</strong></div>
+      <button onclick="confirmarTroco()">Confirmar Pagamento</button>
+    </div>
+  </div>
+
+  <div id="modal-pagamento-misto" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="document.getElementById('modal-pagamento-misto').style.display='none'">&times;</span>
+      <h3>Pagamento Misto</h3>
+      <div><label>Pix:</label><input type="number" step="0.01" id="pg-pix" /></div>
+      <div><label>Crédito:</label><input type="number" step="0.01" id="pg-credito" /></div>
+      <div><label>Débito:</label><input type="number" step="0.01" id="pg-debito" /></div>
+      <div><label>Dinheiro:</label><input type="number" step="0.01" id="pg-dinheiro" /></div>
+      <div><label>Cheque:</label><input type="number" step="0.01" id="pg-cheque" /></div>
+      <div><label>VR:</label><input type="number" step="0.01" id="pg-vr" /></div>
+      <hr>
+      <div><label><strong>Total da Venda:</strong></label><strong id="total-misto"></strong></div>
+      <button onclick="confirmarPagamentoMisto()">Confirmar</button>
+      <button onclick="document.getElementById('modal-pagamento-misto').style.display='none'">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-senha-cancelar" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalSenhaCancelar()">&times;</span>
+      <h3>🔐 Cancelar Item</h3>
+      <input type="password" id="senha-cancelar-input" placeholder="Digite a senha de cancelamento" />
+      <button onclick="confirmarCancelamento()">Confirmar</button>
+      <button onclick="fecharModalSenhaCancelar()">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-sangria" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="document.getElementById('modal-sangria').style.display='none'">&times;</span>
+      <h3>Remover Valor (Sangria)</h3>
+      <label>Valor:</label>
+      <input type="text" id="valor-sangria" placeholder="R$ 0,00" />
+      <label>Motivo:</label>
+      <input type="text" id="motivo-sangria" placeholder="Ex: Pagamento de conta" />
+      <button onclick="confirmarSangria()">Confirmar Sangria</button>
+      <button onclick="document.getElementById('modal-sangria').style.display='none'">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-configuracoes" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalConfiguracoes()">&times;</span>
+      <h3>⚙️ Configurações da Loja</h3>
+      <label for="nome-loja-input">Nome da Loja:</label>
+      <input type="text" id="nome-loja-input" placeholder="Digite o nome da loja" />
+      <button onclick="salvarConfiguracoesLoja()">Salvar</button>
+      
+      <hr style="margin: 20px 0;">
+
+      <div class="setting-item">
+        <label for="background-upload">Fundo de Caixa:</label>
+        <input type="file" id="background-upload" accept="image/*">
+        <button id="set-background-button">Definir Fundo</button>
+        <button id="clear-background-button" style="background-color: #dc3545;">Limpar Fundo</button>
+      </div>
+
+      <button onclick="fecharModalConfiguracoes()">Fechar</button>
+    </div>
+  </div>
+
+  <div id="modal-selecionar-cliente" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="fecharModalFiado()">&times;</span>
+      <h3>Selecionar Cliente para Fiado</h3>
+      <p>Total da Venda: <strong id="total-venda-fiado">R$ 0,00</strong></p>
+
+      <label for="filtro-cliente-fiado" style="margin-top:15px;">Filtrar Cliente:</label>
+      <input type="text" id="filtro-cliente-fiado" placeholder="Digite o nome ou identificador..." style="width: 100%; padding: 10px; font-size: 1em; margin-bottom: 10px;">
+      <label for="select-cliente-fiado">Selecione o Cliente:</label>
+      <select id="select-cliente-fiado" style="width: 100%; padding: 10px; font-size: 1.1em; margin-top: 10px;">
+        </select>
+
+      <button onclick="confirmarVendaFiado()" style="margin-top: 20px;">Confirmar Venda (Fiado)</button>
+      <button onclick="fecharModalFiado()" class="cancel">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="modal-desconto" class="modal">
+    <div class="modal-content">
+        <span class="modal-close-button" onclick="fecharModalDesconto()">&times;</span>
+        <h3>Aplicar Desconto</h3>
+        <p><strong>Total da Venda:</strong> R$ <span id="desconto-valor-total-venda">0.00</span></p>
+
+        <label for="senha-desconto">Senha de Administrador:</label>
+        <input type="password" id="senha-desconto" placeholder="Digite a senha">
+
+        <label for="valor-desconto">Valor do Desconto (R$):</label>
+        <input type="number" id="valor-desconto" placeholder="Ex: 5.00" step="0.01">
+
+        <button class="confirm" onclick="confirmarDesconto()">Aplicar Desconto</button>
+        <button class="cancel" onclick="fecharModalDesconto()">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="caixa.js"></script>
+</body>
+</html>

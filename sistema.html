@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controle de Estoque</title>
+
+    <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="main-header-bar">
+        <button class="btn-pequeno-header" onclick="window.location.href='index.html'">⬅ Sair</button>
+
+        <div class="main-navigation-buttons">
+            <a href="caixa.html" target="_blank"><button>🧾 Frente de Caixa</button></a>
+            <button onclick="window.location.href='fim_estoque.html'">⚠️ Fim de estoque</button>
+            <button onclick="window.location.href='impresoras.html'">🖨️ Impressoras Emprestadas</button>
+            <button onclick="window.location.href='clientes.html'">👥 Clientes e Fiado</button>
+            <button onclick="window.location.href='todos-produtos.html'">📦 Exibir Todos os Produtos</button>
+            <button onclick="window.location.href='relatorio.html'">📅 Relatório Diário</button>
+            <button onclick="window.location.href='cupons.html'">🧾 Gerenciar Cupons</button> 
+            
+            <button onclick="abrirModalVerificarQuantidade()">🔍 Verificar Quantidade</button>
+            <button onclick="abrirModalRegistrarProduto()">➕ Registrar Novo Produto</button>
+        
+
+        <div class="header-admin-buttons">
+            <button onclick="exportarBackup()">📤 Exportar Backup</button>
+            <input type="file" id="inputBackup" style="display:none" />
+            <button onclick="document.getElementById('inputBackup').click()">📥 Importar Backup</button>
+            <div id="apagarAdminContainer" style="display: none;">
+                <button id="confirmarApagarDados" onclick="confirmarApagarDados()">🗑️ Apagar Todos os Registros</button>
+            </div>
+            <button id="btn-config-index" class="settings-button" onclick="abrirModalConfiguracoesIndex()">⚙️</button>
+        </div>
+    </div>
+    <div id="userMenuContainerGlobal">
+        <div id="userMenu" class="menu-item">Usuário
+            <div id="userMenuOptions" class="submenu">
+                <button onclick="abrirModalCriarUsuario()">Criar usuário</button>
+                <button onclick="abrirModalEditarUsuario()">Editar usuários</button>
+                <button onclick="abrirModalExcluirUsuario()">Excluir usuários</button>
+                <button onclick="abrirModalListarUsuarios()">Todos os usuários</button>
+                <button onclick="logoutUsuario()">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+       
+        <p id="message"></p>
+    </div>
+
+    <div id="modal-configuracoes-index" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalConfiguracoesIndex()">&times;</span>
+            <h3>⚙️ Configurações da Página Inicial</h3>
+            
+            <div class="setting-item">
+                <label for="background-upload-index">Imagem de Fundo da Página:</label>
+                <input type="file" id="background-upload-index" accept="image/*">
+                <button id="set-background-index-button">Definir Fundo</button>
+                <button id="clear-background-index-button" class="cancel">Limpar Fundo</button>
+            </div>
+
+            <button onclick="fecharModalConfiguracoesIndex()">Fechar</button>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Editar Quantidade</h2>
+            <input type="number" id="editQuantityInput" placeholder="Nova quantidade" />
+            <button onclick="saveEdit()">Salvar</button>
+        </div>
+    </div>
+
+    <div id="senhaModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSenhaModal()">&times;</span>
+            <p>Digite a senha para editar o estoque:</p>
+            <input type="password" id="senhaInput" onkeypress="verificarSenha(event)" />
+        </div>
+    </div>
+
+    <div id="modalEditarProduto" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalEditarProduto()">&times;</span>
+            <h2>Verificar e Editar Produto</h2> 
+            <label for="editProdutoCodigo">Código:</label>
+            <input type="text" id="editProdutoCodigo" /> 
+            <label for="editProdutoNome">Nome:</label>
+            <input type="text" id="editProdutoNome" readonly/> 
+            <label for="editProdutoQuantidade">Quantidade:</label>
+            <input type="number" id="editProdutoQuantidade" min="0" readonly/> 
+            <label for="editProdutoPreco">Preço (R$):</label>
+            <input type="number" id="editProdutoPreco" step="0.01" readonly/> 
+            <button onclick="solicitarSenha()">✏️ Editar Informações</button> 
+            <button onclick="salvarEdicaoProduto()">✅ Salvar Alterações</button>
+            <button onclick="fecharModalEditarProduto()" class="cancel">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalRegistrarProduto" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalRegistrarProduto()">&times;</span>
+            <h2>Registrar Novo Produto</h2>
+            <label for="newBarcodeModal">Código de Barras:</label>
+            <input type="text" id="newBarcodeModal" placeholder="Código de Barras" />
+
+            <label for="newNameModal">Nome do Produto:</label>
+            <input type="text" id="newNameModal" placeholder="Nome do Produto" />
+
+            <label for="newStockModal">Quantidade:</label>
+            <input type="number" id="newStockModal" value="1" min="1" placeholder="Quantidade" />
+
+            <label for="newPriceModal">Valor (R$):</label>
+            <input type="number" id="newPriceModal" step="0.01" placeholder="Valor (R$)" />
+
+            <button onclick="registerProductModal()">✅ Registrar Produto</button>
+            <button onclick="fecharModalRegistrarProduto()" class="cancel">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="all-products-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAllProductsModal()">×</span>
+            <h3>Todos os Produtos</h3>
+            <input type="text" id="filter-products-input" placeholder="Filtrar por código ou nome..." onkeyup="filterProducts()" />
+            <div class="product-list-table-container">
+                <table id="all-products-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Qtd</th>
+                            <th>Valor Unitário</th>
+                            <th>Valor Total Produto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-list-body">
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" style="text-align: right; font-weight: bold;">Valor Total do Estoque:</td>
+                            <td id="total-stock-value" style="font-weight: bold;">R$ 0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <button onclick="closeAllProductsModal()">Fechar</button>
+        </div>
+    </div>
+
+    <div id="modalCriarUsuario" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modalCriarUsuario')">&times;</span>
+            <h2>Criar Novo Usuário</h2>
+
+            <label for="nomeUsuario">Nome:</label>
+            <input type="text" id="nomeUsuario" placeholder="Digite o nome do usuário" />
+
+            <label for="senhaUsuario">Senha:</label>
+            <input type="password" id="senhaUsuario" placeholder="Digite a senha" />
+
+            <button onclick="criarUsuario()">Criar Usuário</button>
+        </div>
+    </div>
+
+    <div id="modalEditarUsuario" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modalEditarUsuario')">&times;</span>
+            <h2>Editar Usuário</h2>
+            <label for="nomeUsuarioEditar">Nome do usuário:</label>
+            <input type="text" id="nomeUsuarioEditar" placeholder="Nome do usuário" />
+            <label for="senhaUsuarioEditar">Nova senha:</label>
+            <input type="password" id="senhaUsuarioEditar" placeholder="Nova senha" />
+            <button onclick="editarUsuario()">Salvar</button>
+        </div>
+    </div>
+
+    <div id="modalExcluirUsuario" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalExcluirUsuario()">&times;</span>
+            <h2>Excluir Usuário</h2>
+            <label for="nomeUsuarioExcluir">Nome:</label>
+            <input type="text" id="nomeUsuarioExcluir" placeholder="Nome do usuário" />
+            <button onclick="excluirUsuario()">Excluir</button>
+        </div>
+    </div>
+
+    <div id="modalListarUsuarios" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modalListarUsuarios')">&times;</span>
+            <h2>Lista de Usuários</h2>
+            <div id="user-list"></div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+    <footer id="rodapeFixo">
+        </footer>
+
+    <div id="modal-custom-alert" class="modal">
+      <div class="modal-content-alert">
+        <span id="custom-alert-message">Mensagem aqui</span>
+        <button id="custom-alert-button" onclick="fecharCustomAlert()">OK</button>
+      </div>
+    </div>
+
+</body>
+</html>
+    <footer id="rodapeFixo">
+        © 2025 - Sistema de Controle de Estoque | Desenvolvido por Bruno Rafael|📱 WhatsApp(11)91352-9132 | 📷 Instagram @bruno_nago22 
+    </footer>
+    
+</body>
+</html>

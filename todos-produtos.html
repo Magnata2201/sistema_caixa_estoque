@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todos os Produtos</title>
+  <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="todos-produtos.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Todos os Produtos</h2>
+
+    <div class="header-actions">
+        <button onclick="window.location.href='sistema.html'">Voltar</button>
+      <div class="botoes-container">
+        <button id="btnImprimirCompleto" style="
+  margin: 20px 0;
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+">
+  Imprimir Relatório Completo
+</button>
+        <button id="btnSalvarPDF" style="
+  margin: 20px 0;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+">
+  Salvar como PDF
+</button>
+      </div>
+    </div>
+
+    <input type="text" id="filtroTodosInput" placeholder="Filtrar por nome ou código..." class="filter-input" />
+
+    <div class="table-container">
+      <table id="todos-produtos-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome do Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Valor Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="total-label">Valor Total do Estoque:</td>
+            <td id="total-estoque-geral" class="total-value">R$ 0,00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const produtos = obterDados("produtos") || {};
+      const filtroInput = document.getElementById("filtroTodosInput");
+      const tbody = document.querySelector("#todos-produtos-table tbody");
+      const totalElement = document.getElementById("total-estoque-geral");
+
+      function atualizarTabela() {
+        const filtro = filtroInput.value.toLowerCase().trim();
+        let total = 0;
+
+        const filtrados = Object.entries(produtos).filter(([codigo, p]) =>
+          codigo.includes(filtro) || p.nome.toLowerCase().includes(filtro)
+        );
+
+        tbody.innerHTML = "";
+        if (filtrados.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum produto encontrado.</td></tr>`;
+          totalElement.innerText = "R$ 0,00";
+          return;
+        }
+
+        filtrados.forEach(([codigo, p]) => {
+          const valorTotal = p.quantidade * p.valor;
+          total += valorTotal;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${codigo}</td>
+            <td>${p.nome}</td>
+            <td>${p.quantidade}</td>
+            <td>R$ ${p.valor.toFixed(2)}</td>
+            <td>R$ ${valorTotal.toFixed(2)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        totalElement.innerText = `R$ ${total.toFixed(2)}`;
+      }
+
+      atualizarTabela();
+      filtroInput.addEventListener("input", atualizarTabela);
+
+      // SALVAR COMO PDF
+      document.getElementById("btnSalvarPDF").addEventListener("click", () => {
+        const element = document.querySelector(".container");
+        const opt = {
+          margin: 10,
+          filename: `todos_produtos_${new Date().toISOString().split('T')[0]}.pdf`,
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+      });
+    });
+    
+    
+// FUNÇÃO DE IMPRESSÃO PERFEITA (SEM CORTE, COM BORDAS)
+document.getElementById('btnImprimirCompleto')?.addEventListener('click', function() {
+  // 1. Clona apenas o conteúdo principal
+  const container = document.querySelector('.container');
+  if (!container) return;
+
+  const clone = container.cloneNode(true);
+
+  // Remove botões, inputs, etc do clone
+  clone.querySelectorAll('button, input, select, .quick-action-buttons').forEach(el => el.remove());
+
+  // Estilo da tabela no clone
+  const style = document.createElement('style');
+  style.textContent = `
+    body, html { margin:0; padding:0; font-family: Arial, sans-serif; }
+    .container { 
+      width: 100% !important; 
+      max-width: none !important; 
+      padding: 1.5cm !important; 
+      box-sizing: border-box;
+    }
+    table { 
+      width: 100% !important; 
+      border-collapse: collapse !important; 
+      margin-top: 20px;
+      table-layout: auto !important;
+    }
+    th, td { 
+      border: 1px solid #000 !important; 
+      padding: 10px 8px !important; 
+      text-align: left; 
+      font-size: 11pt !important;
+      word-wrap: break-word;
+    }
+    th { 
+      background-color: #f0f0f0 !important; 
+      font-weight: bold; 
+      text-align: center;
+    }
+    h1, h2, h3 { 
+      text-align: center; 
+      margin: 0.5cm 0; 
+      page-break-after: avoid;
+    }
+    @page { margin: 1cm; size: A4; }
+  `;
+
+  // 2. Cria iframe oculto
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'absolute';
+  iframe.style.width = '0px';
+  iframe.style.height = '0px';
+  iframe.style.border = '0px';
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write('<html><head><title>Relatório</title></head><body>');
+  doc.head.appendChild(style);
+  doc.body.appendChild(clone);
+  doc.write('</body></html>');
+  doc.close();
+
+  // 3. Imprime
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    // Remove iframe após 1s
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }, 500);
+});
+
+  </script>
+</body>
+</html>

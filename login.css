@@ -1,0 +1,138 @@
+/* login.css */
+
+/* Reset Básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos Globais do Corpo da Página de Login */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient to bottom right, #4CAF50, #2196F3; /* Degradê de fundo sutil */
+    background-size: cover;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    min-height: 100vh; /* Ocupa a altura total da viewport */
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Contêiner Principal do Login */
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px; /* Cantos mais arredondados */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); /* Sombra mais suave e proeminente */
+    text-align: center;
+    width: 90%;
+    max-width: 400px; /* Largura máxima do formulário de login */
+    box-sizing: border-box;
+    opacity: 0; /* Começa invisível para uma animação */
+    transform: translateY(20px); /* Começa um pouco abaixo para a animação */
+    animation: fadeInScale 0.6s ease-out forwards; /* Animação de entrada */
+}
+
+/* Animação de Entrada do Contêiner de Login */
+@keyframes fadeInScale {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Título do Formulário de Login */
+.login-container h2 {
+    font-size: 2.2em;
+    color: #2c3e50; /* Azul escuro */
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* Inputs de Usuário e Senha */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px; /* Espaço maior entre os campos */
+    border: 1px solid #c0c0c0; /* Borda mais suave */
+    border-radius: 8px; /* Cantos arredondados */
+    font-size: 1.1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+    border-color: #007bff; /* Azul vibrante ao focar */
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2); /* Sombra de foco */
+    outline: none; /* Remove o contorno padrão do navegador */
+}
+
+/* Botão de Entrar */
+.login-container button {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff; /* Azul primário */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Cantos arredondados */
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* Sombra no botão */
+}
+
+.login-container button:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+    transform: translateY(-3px); /* Efeito de "levantar" */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* Sombra mais intensa */
+}
+
+.login-container button:active {
+    transform: translateY(0); /* Retorna ao normal ao clicar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Mensagem de Login (Erro/Sucesso) */
+#login-message {
+    margin-top: 25px;
+    font-size: 1em;
+    color: #dc3545; /* Vermelho para erro padrão */
+    font-weight: 500;
+}
+
+/* Responsividade Básica para Telas Menores */
+@media (max-width: 500px) {
+    .login-container {
+        padding: 30px;
+        border-radius: 10px;
+    }
+    .login-container h2 {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+    }
+    .login-container input,
+    .login-container button {
+        padding: 12px;
+        font-size: 1em;
+    }
+    #login-message {
+        font-size: 0.9em;
+    }
+}
+
+/* Rodapé (se houver, estilo básico) */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    color: white;
+    font-size: 0.8em;
+}

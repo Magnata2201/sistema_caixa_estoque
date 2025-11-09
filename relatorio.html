@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório Diário</title>
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="relatorio.css" /> 
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Relatório Diário</h1>
+    <br/>
+    <button onclick="window.location.href='sistema.html'">Voltar</button>
+
+    <div class="botoes-container">
+      <button id="btnImprimir" style="margin: 20px 0; padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; display: block; width: 100%; max-width: 300px;">
+        Imprimir Relatório
+      </button>
+      <button id="btnSalvarPDF" style="
+        margin: 20px 0;
+        padding: 12px 24px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: block;
+        width: 100%;
+        max-width: 300px;">
+        Salvar como PDF
+      </button>
+    </div>
+
+    <input type="date" id="report-date" onchange="showReport()" />
+    
+    <div id="report-content" style="margin-top: 20px; padding: 20px; background: white; border-radius: 8px;">
+      </div>
+  </div>
+
+  <script src="script.js"></script>
+  
+<script src="script.js"></script>
+  
+  <script>
+    
+    // Função auxiliar para pegar a data local atual no formato YYYY-MM-DD
+    function getHojeLocal() {
+      const hoje = new Date();
+      const ano = hoje.getFullYear();
+      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    // Carrega relatório da data atual ao abrir
+    window.onload = () => {
+      // CORREÇÃO: Usa getHojeLocal() ao invés de toISOString()
+      const hoje = getHojeLocal(); 
+      document.getElementById("report-date").value = hoje;
+      
+      // Verifica se a função showReport (do script.js) já foi carregada
+      if (typeof showReport === 'function') {
+        showReport();
+      } else {
+        console.error("Função showReport() não encontrada. Verifique se o script.js está sendo carregado corretamente.");
+        document.getElementById("report-content").innerHTML = "<p style='color:red;'>Erro ao carregar o script principal.</p>";
+      }
+    };
+
+    // --- FUNÇÃO SALVAR COMO PDF (LIMPO) ---
+    document.getElementById("btnSalvarPDF").addEventListener("click", () => {
+      // 1. Clona o container principal
+      const clone = document.querySelector('.container').cloneNode(true);
+
+      // 2. Remove todos os elementos indesejados do CLONE
+      clone.querySelectorAll('button, input, .botoes-container, br').forEach(el => el.remove());
+      
+      const element = clone;
+      // Usa a data local (corrigida) para o nome do arquivo
+      const data = document.getElementById("report-date").value || getHojeLocal();
+
+      const opt = {
+        margin: [10, 10, 10, 10], 
+        filename: `relatorio_diario_${data}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    });
+    
+    // --- FUNÇÃO DE IMPRESSÃO (LIMPA) ---
+    document.getElementById('btnImprimir').addEventListener('click', function() {
+      // 1. Clona apenas o conteúdo principal
+      const container = document.querySelector('.container');
+      if (!container) return;
+      const clone = container.cloneNode(true);
+
+      // 2. Remove elementos indesejados do clone
+      clone.querySelectorAll('button, input, select, .botoes-container, br').forEach(el => el.remove());
+
+      // 3. Estilo para impressão (Incluindo os estilos da planilha)
+      const style = document.createElement('style');
+      style.textContent = `
+        body, html { margin:0; padding:0; font-family: Arial, sans-serif; }
+        .container { 
+          width: 100% !important; 
+          max-width: none !important; 
+          padding: 1.5cm !important; 
+          box-sizing: border-box;
+          box-shadow: none;
+          border: none;
+        }
+        
+        h1, h2, h3 { 
+          text-align: center; 
+          margin: 0.5cm 0; 
+          page-break-after: avoid;
+          color: #000;
+          border-bottom: 2px solid #ccc;
+        }
+        p { font-size: 11pt; }
+        
+        /* Estilo das Planilhas */
+        .report-table {
+            width: 100% !important; 
+            border-collapse: collapse !important; 
+            margin-top: 20px;
+            table-layout: auto !important;
+            font-size: 10pt !important;
+        }
+        .report-table th, .report-table td { 
+            border: 1px solid #000 !important; 
+            padding: 8px 6px !important; 
+            text-align: left; 
+            word-wrap: break-word;
+        }
+        .report-table th { 
+            background-color: #f0f0f0 !important; 
+            font-weight: bold; 
+            text-align: center;
+        }
+        .report-table td:last-child { text-align: right; }
+
+        /* Resumo Financeiro */
+        .resumo-financeiro {
+            background: #f9f9f9 !important;
+            border: 1px solid #999 !important;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 11pt;
+        }
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .resumo-item strong { font-weight: bold; }
+        .resumo-item.negativo strong { color: #000; } /* Impressão P&B */
+        .resumo-item.total-final {
+            background: #eee !important;
+            padding: 10px;
+            font-size: 12pt;
+        }
+        .valor-positivo { color: #000; font-weight: bold; }
+        .valor-negativo { color: #000; font-weight: bold; }
+
+        @page { margin: 1cm; size: A4; }
+      `;
+
+      // 4. Cria iframe oculto
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.width = '0px';
+      iframe.style.height = '0px';
+      iframe.style.border = '0px';
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write('<html><head><title>Relatório</title></head><body>');
+      doc.head.appendChild(style);
+      doc.body.appendChild(clone);
+      doc.write('</body></html>');
+      doc.close();
+
+      // 5. Imprime
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        // Remove iframe após 1s
+        setTimeout(() => document.body.removeChild(iframe), 1000);
+      }, 500);
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+/* relatorio.css */
+
+/* Estilos Globais e Reset Básico */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f2f5; /* Fundo cinza claro suave */
+    margin: 0;
+    padding: 25px; /* Espaçamento ao redor do conteúdo principal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container Principal da Página */
+.container {
+    background-color: #ffffff;
+    padding: 30px 40px; /* Mais padding para uma sensação de espaço */
+    border-radius: 12px; /* Cantos mais arredondados */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* Sombra mais pronunciada e suave */
+    width: 95%; /* Ocupa mais largura */
+    max-width: 900px; /* Limite máximo para não esticar demais em telas grandes */
+    margin-top: 20px;
+    box-sizing: border-box; /* Garante que padding e border estão incluídos na largura/altura */
+}
+
+/* Título Principal da Página */
+h1 {
+    font-size: 2.2em;
+    color: #2c3e50; /* Azul escuro quase preto */
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Botão "Voltar" */
+.container > button:first-of-type { /* Seleciona o primeiro botão diretamente no container */
+    background-color: #6c757d; /* Cor cinza para o botão de voltar */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 20px; /* Espaço abaixo do botão voltar */
+    align-self: flex-start; /* Alinha o botão à esquerda dentro do container */
+}
+
+.container > button:first-of-type:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Botões de Ação (Imprimir, Salvar PDF) */
+.botoes-container {
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+    gap: 15px; /* Espaçamento entre os botões */
+    margin-bottom: 20px;
+    width: 100%; /* Ocupa a largura total para alinhamento */
+}
+
+.botoes-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botoes-container button:nth-of-type(1) { /* Botão Imprimir */
+    background-color: #17a2b8; /* Azul ciano */
+    color: white;
+}
+.botoes-container button:nth-of-type(1):hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+}
+
+.botoes-container button#btnSalvarPDF { /* Botão Salvar como PDF */
+    background-color: #007bff; /* Azul primário */
+    color: white;
+}
+.botoes-container button#btnSalvarPDF:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Input de Data */
+input[type="date"] {
+    width: 100%; /* Ocupa a largura total */
+    padding: 12px 15px;
+    border: 1px solid #c0c0c0;
+    border-radius: 8px;
+    font-size: 1.05em;
+    margin-bottom: 30px; /* Espaço antes do conteúdo do relatório */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; /* Centraliza o texto */
+    -webkit-appearance: none; /* Remove estilo padrão do navegador para input de data */
+    -moz-appearance: none;
+    appearance: none;
+    background: white url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16"><path d="M6.5 0A.5.5 0 0 1 7 0v.5H8V0a.5.5 0 0 1 1 0v.5h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5zm0 1V0h-2A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11A1.5 1.5 0 0 0 15 13.5V2.5A1.5 1.5 0 0 0 13.5 1h-2V0zm-4.5 5.5H14v-2H2v2z"/></svg>') no-repeat right 10px center;
+    background-size: 18px; /* Ajusta o tamanho do ícone */
+    cursor: pointer;
+}
+
+input[type="date"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Conteúdo do Relatório */
+#report-content {
+    margin-top: 20px;
+    padding: 20px 0; /* Mais padding vertical */
+    border-top: 1px solid #e0e0e0; /* Linha divisória suave */
+}
+
+#report-content h2 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#report-content h3 {
+    font-size: 1.5em;
+    color: #34495e;
+    margin-top: 30px; /* Espaçamento entre seções */
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0; /* Linha de divisão para subtítulos */
+    padding-bottom: 5px;
+}
+
+#report-content h4 {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#report-content p {
+    margin: 8px 0;
+    font-size: 1.05em;
+    color: #555;
+}
+
+#report-content p strong {
+    color: #333;
+    min-width: 150px; /* Garante alinhamento para rótulos em negrito */
+    display: inline-block;
+}
+
+/* Destaque para total de cancelamentos (vermelho) */
+#report-content p strong[style="color: red;"] {
+    color: #dc3545 !important; /* Vermelho forte para o total de cancelamentos */
+    font-weight: bold;
+}
+/* Se a regra for apenas <p style="color: red;">, o estilo será aplicado diretamente */
+
+/* Linhas Horizontais */
+hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 30px 0; /* Mais espaçamento para as divisões */
+}
+
+/* Mídias Queries para Responsividade */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    .container {
+        padding: 20px;
+        width: 100%;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    .botoes-container {
+        flex-direction: column; /* Botões empilhados em telas pequenas */
+        align-items: stretch; /* Estica os botões para largura total */
+    }
+    .botoes-container button {
+        width: 100%;
+        margin-bottom: 10px; /* Espaçamento entre botões empilhados */
+    }
+    input[type="date"] {
+        font-size: 1em;
+    }
+    #report-content h2 {
+        font-size: 1.5em;
+    }
+    #report-content h3 {
+        font-size: 1.3em;
+    }
+    #report-content p {
+        font-size: 0.95em;
+    }
+    #report-content p strong {
+        display: block; /* Rótulos em negrito em nova linha para telas menores */
+        min-width: unset;
+        margin-bottom: 5px;
+    }
+}
+/* Em relatorio.css */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+h1, h2, h3 {
+    color: #1a253c;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+}
+h1 { text-align: center; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.4em; margin-top: 30px; }
+
+/* Estilo da "Planilha" */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.95em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden; /* Para o border-radius funcionar */
+}
+.report-table th, 
+.report-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+.report-table th {
+    background-color: #f7f9fc;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+.report-table tbody tr:nth-of-type(even) {
+    background-color: #fdfdfd;
+}
+.report-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Cores para valores */
+.valor-positivo {
+    color: #28a745;
+    font-weight: bold;
+}
+.valor-negativo {
+    color: #dc3545;
+    font-weight: bold;
+}
+.report-table td:last-child {
+    text-align: right;
+    font-feature-settings: "tnum"; /* Alinha números */
+}
+
+/* Resumo Financeiro */
+.resumo-financeiro {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+.resumo-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+    padding: 8px 0;
+}
+.resumo-item span {
+    color: #555;
+}
+.resumo-item strong {
+    font-size: 1.15em;
+    font-feature-settings: "tnum";
+}
+.resumo-item.positivo strong {
+    color: #0064d3; /* Azul para entradas */
+}
+.resumo-item.negativo strong {
+    color: #c82333; /* Vermelho para saídas */
+}
+.resumo-financeiro hr {
+    border: 0;
+    border-top: 2px dashed #ccc;
+    margin: 5px 0;
+}
+.resumo-item.total-liquido strong {
+    color: #1a253c;
+    font-weight: 700;
+}
+.resumo-item.total-final {
+    background: #e6f7ff;
+    padding: 15px;
+    margin: 5px -15px -10px -15px;
+    border-radius: 0 0 6px 6px;
+    border-top: 1px solid #b3e0ff;
+}
+.resumo-item.total-final strong {
+    color: #0056b3;
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+/* Divisor de Seções */
+hr.section-divider {
+    border: 0;
+    border-top: 3px solid #e0e4e8;
+    margin: 40px 0;
+}
+
+/* Botões e Inputs */
+input[type="date"] {
+    font-size: 1.1em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.botoes-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+#btnImprimir {
+    background-color: #28a745;
+    color: white;
+}
+#btnImprimir:hover {
+    background-color: #218838;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+#btnSalvarPDF {
+    background-color: #007bff;
+    color: white;
+}
+#btnSalvarPDF:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+button[onclick*="sistema.html"] {
+    background-color: #6c757d;
+    color: white;
+}
+button[onclick*="sistema.html"]:hover {
+    background-color: #5a6268;
+}

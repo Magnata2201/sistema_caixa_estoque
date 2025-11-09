@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Empréstimo de Impressoras</title>
+  <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="impressoras.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Impressora Emprestada</h1>
+    <button onclick="window.location.href='sistema.html'">⬅ voltar</button>
+
+    <form id="printerForm">
+      <input type="hidden" id="editIndex" value="" />
+
+      <label>Modelo da Impressora:</label>
+      <input type="text" id="modelo" required />
+
+      <label>Cliente:</label>
+      <input type="text" id="cliente" required />
+
+      <label>Pavilhão:</label>
+      <input type="text" id="pavilhao" required />
+
+      <label>Box:</label>
+      <input type="text" id="box" required />
+
+      <label>Data do Empréstimo:</label>
+      <input type="date" id="data" required />
+
+      <button type="submit">Registrar</button>
+    </form>
+
+    <h2>Impressoras Registradas</h2>
+    <table id="registros" class="printer-table">
+      <thead>
+        <tr>
+          <th>Modelo</th>
+          <th>Cliente</th>
+          <th>Pavilhão</th>
+          <th>Box</th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        </tbody>
+    </table>
+
+  <script src="impressoras.js"></script>
+</body>
+</html>

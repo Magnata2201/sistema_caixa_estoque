@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+
+
+  <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Usuário" autocomplete="username" />
+    <input type="password" id="password" placeholder="Senha" autocomplete="current-password" />
+    <button onclick="login()">Entrar</button>
+    <p id="login-message"></p>
+  </div>
+
+  <script>
+    // As funções obterDados e salvarDados estão em script.js (globalmente)
+    // Para o login.html funcionar de forma autônoma sem carregar script.js inteiro
+    // vamos manter uma versão simplificada para a inicialização do admin, mas o ideal
+    // é que login.html também carregue script.js
+    
+    // Simplificada obter/salvarDados para login.html
+    function obterDadosLocal(chave) {
+        const dados = localStorage.getItem(chave);
+        try {
+            return dados ? JSON.parse(dados) : null;
+        } catch (e) {
+            console.error("Erro ao parsear dados do localStorage para a chave:", chave, e);
+            return null;
+        }
+    }
+    function salvarDadosLocal(chave, dados) {
+        localStorage.setItem(chave, JSON.stringify(dados));
+    }
+
+    const usuariosSalvos = obterDadosLocal("usuarios") || [];
+    const adminExiste = usuariosSalvos.some(u => u.usuario === "admin");
+
+    if (!adminExiste) {
+      usuariosSalvos.push({ usuario: "admin", senha: "1996" });
+      salvarDadosLocal(usuariosSalvos);
+    }
+
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("login-message");
+
+      const usuarios = obterDadosLocal("usuarios");
+
+      const usuarioEncontrado = usuarios.find(u => u.usuario === username && u.senha === password);
+
+      if (usuarioEncontrado) {
+        localStorage.setItem("usuarioLogado", username);
+        
+        if (username === "admin") {
+          localStorage.setItem("userRole", "admin");
+        } else {
+          localStorage.setItem("userRole", "user");
+        }
+        window.location.href = "sistema.html"; 
+      } else {
+        msg.textContent = "Usuário ou senha incorretos.";
+      }
+    }
+  </script>
+</body>
+</html>

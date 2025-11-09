@@ -1,0 +1,253 @@
+/* impressoras.css */
+
+/* Reset básico e estilos do corpo */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f2f5; /* Fundo suave */
+    margin: 0;
+    padding: 30px; /* Espaçamento ao redor do conteúdo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container principal da página */
+.container {
+    background-color: #ffffff;
+    padding: 35px 45px; /* Mais preenchimento */
+    border-radius: 12px; /* Cantos arredondados */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra mais profissional */
+    width: 95%;
+    max-width: 900px; /* Largura máxima para o conteúdo */
+    margin-top: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo dentro do container */
+}
+
+/* Títulos */
+h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 700; /* Mais encorpado */
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #34495e;
+    margin-top: 40px; /* Espaço antes do novo título */
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    width: 100%; /* Garante que o título ocupe a largura total */
+}
+
+/* Botão "Voltar" */
+.container > button { /* Seleciona o botão direto no container */
+    background-color: #6c757d; /* Cor cinza para o botão de voltar */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 30px; /* Espaço abaixo do botão voltar */
+    align-self: flex-start; /* Alinha o botão à esquerda dentro do container */
+}
+
+.container > button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Formulário */
+#printerForm {
+    width: 100%;
+    max-width: 500px; /* Largura máxima para o formulário */
+    background-color: #fdfdfd;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra para o formulário */
+    border: 1px solid #e0e0e0;
+}
+
+#printerForm label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 15px; /* Espaçamento entre labels */
+    font-weight: 600;
+    color: #444;
+    font-size: 0.95em;
+}
+
+#printerForm input[type="text"],
+#printerForm input[type="date"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #c0c0c0;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#printerForm input[type="text"]:focus,
+#printerForm input[type="date"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+#printerForm button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 30px;
+    background-color: #28a745; /* Verde para o botão de registro */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#printerForm button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* Tabela de Registros de Impressoras */
+.printer-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Sombra para a tabela */
+    border-radius: 10px;
+    overflow: hidden; /* Garante que as bordas arredondadas funcionem */
+}
+
+.printer-table th,
+.printer-table td {
+    border: 1px solid #e0e0e0; /* Bordas mais finas */
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.95em;
+    vertical-align: middle;
+}
+
+.printer-table th {
+    background-color: #e9ecef; /* Fundo mais escuro para cabeçalhos */
+    color: #34495e;
+    font-weight: 600;
+    text-transform: uppercase; /* Texto em maiúsculas */
+}
+
+.printer-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Fundo zebrado para linhas pares */
+}
+
+.printer-table tbody tr:hover {
+    background-color: #e2f0ff; /* Destaca a linha ao passar o mouse */
+    transition: background-color 0.2s ease;
+}
+
+/* Botões de Ação na Tabela (Editar/Excluir) */
+.action-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-right: 5px; /* Espaçamento entre os botões */
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+}
+
+.edit-btn {
+    background-color: #007bff; /* Azul para editar */
+    color: white;
+}
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn {
+    background-color: #dc3545; /* Vermelho para excluir */
+    color: white;
+}
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    h2 {
+        font-size: 1.4em;
+    }
+    #printerForm {
+        padding: 15px;
+    }
+    .printer-table, .printer-table tbody, .printer-table tr, .printer-table th, .printer-table td {
+        display: block; /* Empilha a tabela em telas pequenas */
+        width: 100%;
+    }
+    .printer-table thead {
+        display: none; /* Esconde o cabeçalho original */
+    }
+    .printer-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        padding: 10px;
+    }
+    .printer-table td {
+        text-align: right;
+        padding-left: 50%; /* Espaço para o pseudo-elemento */
+        position: relative;
+        border: none; /* Remove bordas das células individuais */
+    }
+    .printer-table td::before { /* Adiciona rótulos para cada célula */
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: 600;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Mapeamento de rótulos para as colunas */
+    .printer-table td:nth-of-type(1)::before { content: "Modelo:"; }
+    .printer-table td:nth-of-type(2)::before { content: "Cliente:"; }
+    .printer-table td:nth-of-type(3)::before { content: "Pavilhão:"; }
+    .printer-table td:nth-of-type(4)::before { content: "Box:"; }
+    .printer-table td:nth-of-type(5)::before { content: "Data:"; }
+    .printer-table td:nth-of-type(6)::before { content: "Ações:"; }
+    
+    .action-btn {
+        margin-top: 10px;
+        width: 100%; /* Botões de ação ocupam a largura total */
+        margin-right: 0;
+    }
+}

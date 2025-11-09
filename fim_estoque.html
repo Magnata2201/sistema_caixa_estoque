@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fim de Estoque</title>
+  <!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="fim-estoque.css" />
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Produtos com Estoque Baixo</h2>
+
+    <div class="header-actions">
+      <button onclick="window.location.href='sistema.html'">Voltar</button>
+      <div class="botoes-container">
+        <button id="btnImprimirCompleto" style="
+  margin: 20px 0;
+  padding: 12px 24px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+">
+  Imprimir Relatório Completo
+</button>
+        <!-- 2. SALVAR COMO PDF (Azul) -->
+<button id="btnSalvarPDF" style="
+  margin: 20px 0;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+">
+  Salvar como PDF
+</button>
+      </div>
+    </div>
+
+    <input type="text" id="filtroInput" placeholder="Filtrar por nome ou código..." class="filter-input" />
+
+    <div class="table-container">
+      <table id="low-stock-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome do Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Valor Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="total-label">Valor Total do Estoque Baixo:</td>
+            <td id="total-low-stock-value" class="total-value">R$ 0,00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const produtos = obterDados("produtos") || {};
+      const filtroInput = document.getElementById("filtroInput");
+      const tbody = document.querySelector("#low-stock-table tbody");
+      const totalElement = document.getElementById("total-low-stock-value");
+
+      function atualizarTabela() {
+        const filtro = filtroInput.value.toLowerCase().trim();
+        let total = 0;
+
+        const filtrados = Object.entries(produtos).filter(([codigo, p]) =>
+          p.quantidade <= 5 && p.quantidade > 0 &&
+          (codigo.includes(filtro) || p.nome.toLowerCase().includes(filtro))
+        );
+
+        tbody.innerHTML = "";
+        if (filtrados.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum produto com estoque baixo.</td></tr>`;
+          totalElement.innerText = "R$ 0,00";
+          return;
+        }
+
+        filtrados.forEach(([codigo, p]) => {
+          const valorTotal = p.quantidade * p.valor;
+          total += valorTotal;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${codigo}</td>
+            <td>${p.nome}</td>
+            <td>${p.quantidade}</td>
+            <td>R$ ${p.valor.toFixed(2)}</td>
+            <td>R$ ${valorTotal.toFixed(2)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        totalElement.innerText = `R$ ${total.toFixed(2)}`;
+      }
+
+      atualizarTabela();
+      filtroInput.addEventListener("input", atualizarTabela);
+
+      // SALVAR COMO PDF
+     // SALVAR COMO PDF (CORRIGIDO)
+      document.getElementById("btnSalvarPDF").addEventListener("click", () => {
+        
+        // 1. Clona o container para não modificar a página real
+        const clone = document.querySelector('.container').cloneNode(true);
+
+        // 2. Remove os elementos indesejados DO CLONE
+        // (Todos os botões, o container de ações e o input de filtro)
+        clone.querySelectorAll('button, .header-actions, .botoes-container, input').forEach(el => el.remove());
+
+        // 3. Define o clone limpo como o elemento para salvar
+        const element = clone; 
+        
+        const opt = {
+          margin: 10,
+          filename: `estoque_baixo_${new Date().toISOString().split('T')[0]}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 }, // Adicionado para melhor qualidade
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // 4. Gera o PDF a partir do clone limpo
+        html2pdf().set(opt).from(element).save();
+      });
+    });
+
+    
+// FUNÇÃO DE IMPRESSÃO PERFEITA...
+// (O resto do seu script continua aqui)
+
+    
+// FUNÇÃO DE IMPRESSÃO PERFEITA (SEM CORTE, COM BORDAS)
+document.getElementById('btnImprimirCompleto')?.addEventListener('click', function() {
+  // 1. Clona apenas o conteúdo principal
+  const container = document.querySelector('.container');
+  if (!container) return;
+
+  const clone = container.cloneNode(true);
+
+  // Remove botões, inputs, etc do clone
+  clone.querySelectorAll('button, input, select, .quick-action-buttons').forEach(el => el.remove());
+
+  // Estilo da tabela no clone
+  const style = document.createElement('style');
+  style.textContent = `
+    body, html { margin:0; padding:0; font-family: Arial, sans-serif; }
+    .container { 
+      width: 100% !important; 
+      max-width: none !important; 
+      padding: 1.5cm !important; 
+      box-sizing: border-box;
+    }
+    table { 
+      width: 100% !important; 
+      border-collapse: collapse !important; 
+      margin-top: 20px;
+      table-layout: auto !important;
+    }
+    th, td { 
+      border: 1px solid #000 !important; 
+      padding: 10px 8px !important; 
+      text-align: left; 
+      font-size: 11pt !important;
+      word-wrap: break-word;
+    }
+    th { 
+      background-color: #f0f0f0 !important; 
+      font-weight: bold; 
+      text-align: center;
+    }
+    h1, h2, h3 { 
+      text-align: center; 
+      margin: 0.5cm 0; 
+      page-break-after: avoid;
+    }
+    @page { margin: 1cm; size: A4; }
+  `;
+
+  // 2. Cria iframe oculto
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'absolute';
+  iframe.style.width = '0px';
+  iframe.style.height = '0px';
+  iframe.style.border = '0px';
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write('<html><head><title>Relatório</title></head><body>');
+  doc.head.appendChild(style);
+  doc.body.appendChild(clone);
+  doc.write('</body></html>');
+  doc.close();
+
+  // 3. Imprime
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    // Remove iframe após 1s
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }, 500);
+});
+
+  </script>
+</body>
+</html>

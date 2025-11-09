@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- FAVICON AQUI -->
+  <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cupons.css">
+    <style>
+        /* Você pode adicionar estilos específicos da página aqui ou no cupons.css */
+    </style>
+</head>
+<body>
+    <div class="container-cupons">
+        <h2>Gerenciamento de Cupons</h2>
+        <div class="header-cupons">
+            <div class="search-bar">
+                <input type="text" id="cupom-id-input" placeholder="Buscar por ID do Cupom">
+                <button onclick="buscarCupom()">Buscar</button>
+                <button onclick="carregarTodosCupons()">Limpar Busca</button>
+            </div>
+            <a href="sistema.html" class="btn-back">Voltar </a>
+        </div>
+        
+        <div class="cupons-list" id="cupons-list">
+            </div>
+
+        <div id="no-cupons-message" style="display: none; text-align: center; margin-top: 20px; color: #888;">
+            <p>Nenhum cupom encontrado para os critérios de filtro.</p>
+        </div>
+        <div class="pagination" id="pagination-controls">
+        </div>
+    </div>
+
+    <div id="modal-detalhes-cupom" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" onclick="fecharModalDetalhesCupom()">&times;</span>
+            <h3>Detalhes do Cupom</h3>
+            <div id="detalhes-cupom-body" class="modal-details">
+            </div>
+            <button onclick="fecharModalDetalhesCupom()">Fechar</button>
+        </div>
+    </div>
+
+    <div id="modal-cancelamento" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" onclick="fecharModalCancelamento()">&times;</span>
+            <h3>Cancelar / Devolver Cupom</h3>
+            <p><strong>Cupom ID:</strong> <span id="cancel-cupom-id"></span></p>
+            <p><strong>Valor Total:</strong> R$ <span id="cancel-cupom-total"></span></p>
+
+            <label for="senha-cancelamento">Senha de Administrador:</label>
+            <input type="password" id="senha-cancelamento" placeholder="Digite a senha">
+            
+            <label for="motivo-cancelamento">Motivo:</label>
+            <select id="motivo-cancelamento">
+                <option value="">Selecione um motivo</option>
+                <option value="devolucao">Devolução (retorna ao estoque)</option>
+                <option value="troca">Troca (não retorna ao estoque)</option>
+                <option value="descarte-defeito">Descarte - Defeito (não retorna ao estoque)</option>
+                <option value="descarte-quebra">Descarte - Quebra (não retorna ao estoque)</option>
+            </select>
+
+            <div id="itens-para-cancelar">
+                <h4>Itens do Cupom:</h4>
+            </div>
+            
+            <button class="confirm" onclick="confirmarCancelamentoCupom()">Confirmar</button>
+            <button class="cancel" onclick="fecharModalCancelamento()">Cancelar</button>
+        </div>
+    </div>
+
+        <script src="script.js"></script>
+        <script src="cupons.js"></script>
+</body>
+</html>
